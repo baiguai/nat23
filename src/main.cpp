@@ -49,7 +49,7 @@ namespace Nat20
             std::string help_txt { "" };
 
             help_txt += "Basic Roll --  ";
-            help_txt += "This is the only required element, it specifies how many dice to roll, and how many faces those dice have.\n";
+            help_txt += "This is the only required element, it specifies how many dice to roll, and how many faces those dice have (must be more than 1).\n";
             help_txt += "<dice count>d<face count>\n\n";
             help_txt += "Example:\n";
             help_txt += "2d6\n";
