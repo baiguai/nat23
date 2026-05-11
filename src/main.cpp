@@ -38,6 +38,12 @@ namespace Nat20
                     continue;
                 }
 
+                if (roll_string == "? rolls")
+                {
+                    showHelpRolls();
+                    continue;
+                }
+
                 parseRoll(roll_string);
             }
 
@@ -45,6 +51,17 @@ namespace Nat20
         }
 
         void showHelp()
+        {
+            std::string help_txt { "" };
+
+            help_txt += "For rolls help use: ? rolls";
+            help_txt += "\n\n\n";
+
+
+            std::cout << help_txt; brk();
+        }
+
+        void showHelpRolls()
         {
             std::string help_txt { "" };
 

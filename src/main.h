@@ -13,6 +13,7 @@ namespace Nat20
 
     int handleInput();
     void showHelp();
+    void showHelpRolls();
     void parseRoll(std::string rollstring);
     void doRolls(int times, int best_of, int dice_num, int dice_sides, int advantage, int penalty);
     int doRoll(int dice_sides);
