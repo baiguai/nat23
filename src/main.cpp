@@ -2,12 +2,19 @@
 
 int main()
 {
+    if (Nat20::init() == 1)
+    {
+        return 1;
+    }
+
     return Nat20::handleInput();
 }
 
 namespace Nat20
 {
     bool DEBUG { false };
+    std::string last_roll { "" };
+    std::string config { ""};
 
     // Helpers
         void brk()
@@ -18,6 +25,25 @@ namespace Nat20
 
 
     // Core Functions
+        int init()
+        {
+            std::string filename = "presets.conf";                                                                                                                                                                                                   
+            std::filesystem::path file_path = std::filesystem::current_path() / filename;                                                                                                                                                            
+            config = file_path;
+
+            if (!std::filesystem::exists(file_path)) {
+                std::ofstream ofile(file_path);
+
+                if (!ofile)
+                {
+                    std::cerr << "Unable to create file." << std::endl;
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+
         int handleInput()
         {
             std::string roll_string;
@@ -38,6 +64,46 @@ namespace Nat20
                     continue;
                 }
 
+                if (roll_string == "? rolls")
+                {
+                    showHelpRolls();
+                    continue;
+                }
+
+                if (roll_string == "? presets")
+                {
+                    showHelpPresets();
+                    continue;
+                }
+
+                const std::regex preset_run_pattern("^preset\\s+(\\d+)$");
+                std::smatch run_matches;
+                if (std::regex_search(roll_string, run_matches, preset_run_pattern)) {
+                    int preset_number = std::stoi(run_matches[1].str());
+                    runPreset(preset_number);
+                    continue;
+                }
+
+                const std::regex preset_del_pattern("^delete\\s+(\\d+)$");
+                std::smatch del_matches;
+                if (std::regex_search(roll_string, del_matches, preset_del_pattern)) {
+                    int preset_number = std::stoi(del_matches[1].str());
+                    deletePreset(preset_number);
+                    continue;
+                }
+
+                if (roll_string == "presets")
+                {
+                    readPresets();
+                    continue;
+                }
+
+                if (roll_string == "save")
+                {
+                    savePreset();
+                    continue;
+                }
+
                 parseRoll(roll_string);
             }
 
@@ -48,8 +114,21 @@ namespace Nat20
         {
             std::string help_txt { "" };
 
+            help_txt += "For rolls help use: ? rolls";
+            help_txt += "\n";
+            help_txt += "For presets help use: ? presets";
+            help_txt += "\n\n\n";
+
+
+            std::cout << help_txt; brk();
+        }
+
+        void showHelpRolls()
+        {
+            std::string help_txt { "" };
+
             help_txt += "Basic Roll --  ";
-            help_txt += "This is the only required element, it specifies how many dice to roll, and how many faces those dice have.\n";
+            help_txt += "This is the only required element, it specifies how many dice to roll, and how many faces those dice have (must be more than 1).\n";
             help_txt += "<dice count>d<face count>\n\n";
             help_txt += "Example:\n";
             help_txt += "2d6\n";
@@ -91,6 +170,23 @@ namespace Nat20
             std::cout << help_txt; brk();
         }
 
+        void showHelpPresets()
+        {
+            std::string help_txt { "" };
+
+            help_txt += "List Presets:\n";
+            help_txt += "presets\n";
+            help_txt += "Lists the saved presets.\n\n";
+            help_txt += "save\n";
+            help_txt += "Saves the last run roll as a preset.\n\n";
+            help_txt += "preset <number>\n";
+            help_txt += "Runs the specified preset roll.\n\n";
+            help_txt += "delete <number>\n";
+            help_txt += "Deletes the specified preset.";
+
+            std::cout << help_txt; brk();
+        }
+
         void parseRoll(std::string rollstring)
         {
             if (DEBUG)
@@ -104,6 +200,8 @@ namespace Nat20
             int dice_sides { 1 };
             int advantage { 0 };
             int penalty { 0 };
+
+            last_roll = rollstring;
 
             try
             {
@@ -135,12 +233,14 @@ namespace Nat20
 
                 if (dice_num < 1 || dice_sides < 2)
                 {
+                    last_roll = "";
                     showHelp();
                     return;
                 }
             }
             catch (const std::invalid_argument& e)
             {
+                last_roll = "";
                 showHelp();
                 return;
             }
@@ -243,5 +343,144 @@ namespace Nat20
             }
 
             return "";
+        }
+
+
+    // Presets Methods
+        void readPresets()
+        {
+            std::cout << '\n';
+
+            std::ifstream input_file(config);
+            std::string line { "" };
+            int presetIndex { 1 };
+
+            if (!input_file.is_open()) {
+                std::cerr << "Unable to open file." << '\n';
+                return;
+            }
+
+            while (std::getline(input_file, line)) {
+                if (line != "")
+                {
+                    std::cout << presetIndex << ": " << line << '\n';
+                    ++presetIndex;
+                }
+            }
+
+            if (presetIndex == 1)
+            {
+                std::cout << "There are no presets saved." << '\n';
+            }
+
+            input_file.close(); 
+
+            std::cout << '\n';
+        }
+
+        void savePreset()
+        {
+            if (last_roll == "")
+            {
+                std::cout << "No previous roll to save." << '\n';
+                return;
+            }
+
+            std::ifstream input_file(config);
+
+            if (input_file.is_open())
+            {
+                std::string line;
+
+                while (std::getline(input_file, line))
+                {
+                    if (line == last_roll)
+                    {
+                        std::cout << "The preset already exists."; brk();
+                        input_file.close();
+                        return;
+                    }
+                }
+            }
+
+            std::ofstream output_file(config, std::ios::app);
+
+            if (output_file.is_open())
+            {
+                output_file << last_roll << '\n';
+                output_file.close();                                                                                                                                                                                                             
+                std::cout << "Preset saved." << '\n';
+            }
+            else
+            {                                                                                                                                                                                                                             
+                std::cerr << "Unable to open configuration file for writing." << '\n';
+            }                                                                                                                                                                                                                                    
+        }
+
+        void runPreset(int presetNum)
+        {
+            std::ifstream input_file(config);
+            int row {0};
+
+            if (input_file.is_open())
+            {
+                std::string line;
+
+                while (std::getline(input_file, line))
+                {
+                    if (row == (presetNum - 1))
+                    {
+                        if (line == "")
+                        {
+                            continue;
+                        }
+
+                        std::cout << "Running preset: " << line << "\n\n";
+                        parseRoll(line);
+                        break;
+                    }
+
+                    ++row;
+                }
+            }
+        }
+
+        void deletePreset(int presetNum)
+        {
+            std::ifstream input_file(config);
+            int row {0};
+            std::string contents { "" };
+
+            if (input_file.is_open())
+            {
+                std::string line;
+
+                while (std::getline(input_file, line))
+                {
+                    if (row != (presetNum - 1))
+                    {
+                        if (contents != "")
+                        {
+                            contents = contents + '\n';
+                        }
+                        contents = contents + line;
+                    }
+
+                    ++row;
+                }
+            }
+
+            std::ofstream output_file(config, std::ios::trunc);
+
+            if (output_file.is_open())
+            {
+                output_file << contents << '\n';
+                output_file.close();                                                                                                                                                                                                             
+                std::cout << "Preset deleted."; brk();
+            }
+            else
+            {                                                                                                                                                                                                                             
+                std::cerr << "Unable to open configuration file for writing." << '\n';
+            }                                                                                                                                                                                                                                    
         }
 }
