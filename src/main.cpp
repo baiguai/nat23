@@ -118,6 +118,9 @@ namespace Nat20
             help_txt += "\n";
             help_txt += "For presets help use: ? presets";
             help_txt += "\n\n\n";
+            help_txt += "Quit the application\n";
+            help_txt += "q";
+            help_txt += "\n\n\n";
 
 
             std::cout << help_txt; brk();
@@ -161,11 +164,6 @@ namespace Nat20
             help_txt += "Example:\n";
             help_txt += "3d20-2\n";
             help_txt += "3*(2)4d6-2";
-            help_txt += "\n\n\n";
-            help_txt += "Quit the application\n";
-            help_txt += "q";
-            help_txt += "\n\n\n";
-
 
             std::cout << help_txt; brk();
         }
