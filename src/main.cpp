@@ -76,6 +76,11 @@ namespace Nat20
                     continue;
                 }
 
+                if (roll_string == "preset")
+                {
+                    std::cout << "To run a preset use:  preset <number>"; brk();
+                    continue;
+                }
                 const std::regex preset_run_pattern("^preset\\s+(\\d+)$");
                 std::smatch run_matches;
                 if (std::regex_search(roll_string, run_matches, preset_run_pattern)) {
@@ -84,6 +89,11 @@ namespace Nat20
                     continue;
                 }
 
+                if (roll_string == "delete")
+                {
+                    std::cout << "To delete a preset use:  delete <number>"; brk();
+                    continue;
+                }
                 const std::regex preset_del_pattern("^delete\\s+(\\d+)$");
                 std::smatch del_matches;
                 if (std::regex_search(roll_string, del_matches, preset_del_pattern)) {
@@ -176,7 +186,7 @@ namespace Nat20
             help_txt += "presets\n";
             help_txt += "Lists the saved presets.\n\n";
             help_txt += "save\n";
-            help_txt += "Saves the last run roll as a preset.\n\n";
+            help_txt += "Saves the last roll you did as a preset.\n\n";
             help_txt += "preset <number>\n";
             help_txt += "Runs the specified preset roll.\n\n";
             help_txt += "delete <number>\n";
@@ -380,7 +390,7 @@ namespace Nat20
         {
             if (last_roll == "")
             {
-                std::cout << "No previous roll to save." << '\n';
+                std::cout << "No previous roll to save."; brk();
                 return;
             }
 
