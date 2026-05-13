@@ -10,11 +10,12 @@
 #include <stdexcept>
 #include <list>
 
-namespace Nat20
+namespace Nat23
 {
     void brk();
 
     int init();
+    void showHome();
     int handleInput();
     void showHelp();
     void showHelpRolls();

@@ -2,15 +2,17 @@
 
 int main()
 {
-    if (Nat20::init() == 1)
+    if (Nat23::init() == 1)
     {
         return 1;
     }
 
-    return Nat20::handleInput();
+    Nat23::showHome();
+
+    return Nat23::handleInput();
 }
 
-namespace Nat20
+namespace Nat23
 {
     bool DEBUG { false };
     std::string last_roll { "" };
@@ -36,12 +38,24 @@ namespace Nat20
 
                 if (!ofile)
                 {
-                    std::cerr << "Unable to create file." << std::endl;
+                    std::cout << "Unable to create file." << std::endl;
                     return 1;
                 }
             }
 
             return 0;
+        }
+
+        void showHome()
+        {
+            std::cout << "+------------------+\n";
+            std::cout << "|  NAT23           |\n";
+            std::cout << "+------------------+\n";
+            std::cout << "\n";
+            std::cout << "Use ? for help.\n";
+            std::cout << "\n";
+            std::cout << "\n";
+            std::cout << "\n";
         }
 
         int handleInput()
