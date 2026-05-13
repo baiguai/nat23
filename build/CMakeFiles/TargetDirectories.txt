@@ -1,3 +1,0 @@
-/home/baiguai/documents/development/cpp/nat20/nat20/build/CMakeFiles/nat20.dir
-/home/baiguai/documents/development/cpp/nat20/nat20/build/CMakeFiles/edit_cache.dir
-/home/baiguai/documents/development/cpp/nat20/nat20/build/CMakeFiles/rebuild_cache.dir

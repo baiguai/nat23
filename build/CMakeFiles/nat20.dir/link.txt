@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/nat20.dir/src/main.cpp.o -o bin/nat20 
