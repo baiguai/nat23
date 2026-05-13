@@ -11,7 +11,7 @@ echo "Building Nat20..."
 ./build.sh
 
 # Check if build was successful
-if [ ! -f "build/bin/nat20" ]; then
+if [ ! -f "build/bin/nat23" ]; then
     echo "! Build failed ! -- Cannot start Nat20."
     exit 1
 fi
@@ -21,4 +21,4 @@ echo ""
 echo ""
 
 # Run the application
-./build/bin/nat20
+./build/bin/nat23

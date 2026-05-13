@@ -38,15 +38,15 @@ echo "Compiling..."
 make
 
 # Check if build was successful
-if [ -f "bin/nat20" ]; then
+if [ -f "bin/nat23" ]; then
     echo "-- Build successful --"
-    echo "Executable: $(pwd)/bin/nat20"
+    echo "Executable: $(pwd)/bin/nat23"
     echo ""
-    echo "To run nat20:"
-    echo "  ./bin/nat20"
+    echo "To run nat23:"
+    echo "  ./bin/nat23"
     echo ""
     echo "Or from the parent directory:"
-    echo "  ./build/bin/nat20"
+    echo "  ./build/bin/nat23"
 else
     echo "! failed !"
     exit 1
