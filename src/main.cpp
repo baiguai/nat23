@@ -23,6 +23,10 @@ namespace Nat23
         {
             std::cout << '\n' << '\n';
         }
+        void drawPrompt()
+        {
+            std::cout << "\n\nRoll:\n";
+        }
 
 
 
@@ -64,7 +68,7 @@ namespace Nat23
 
             while (true)
             {
-                std::cout << "Roll:" << '\n';
+                drawPrompt();
                 std::getline(std::cin, roll_string);
 
                 if (roll_string == "q")
@@ -90,15 +94,15 @@ namespace Nat23
                     continue;
                 }
 
-                if (roll_string == "preset")
+                if (roll_string == "preset" || roll_string == "p")
                 {
-                    std::cout << "To run a preset use:  preset <number>"; brk();
+                    std::cout << "To run a preset use:  preset <number> -- or p <number>"; brk();
                     continue;
                 }
-                const std::regex preset_run_pattern("^preset\\s+(\\d+)$");
+                const std::regex preset_run_pattern("^(preset|p)\\s+(\\d+)$");
                 std::smatch run_matches;
                 if (std::regex_search(roll_string, run_matches, preset_run_pattern)) {
-                    int preset_number = std::stoi(run_matches[1].str());
+                    int preset_number = std::stoi(run_matches[2].str());
                     runPreset(preset_number);
                     continue;
                 }
@@ -201,7 +205,7 @@ namespace Nat23
             help_txt += "Lists the saved presets.\n\n";
             help_txt += "save\n";
             help_txt += "Saves the last roll you did as a preset.\n\n";
-            help_txt += "preset <number>\n";
+            help_txt += "preset <number> --or-- p <number>\n";
             help_txt += "Runs the specified preset roll.\n\n";
             help_txt += "delete <number>\n";
             help_txt += "Deletes the specified preset.";

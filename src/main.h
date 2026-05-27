@@ -13,6 +13,7 @@
 namespace Nat23
 {
     void brk();
+    void drawPrompt();
 
     int init();
     void showHome();
