@@ -205,7 +205,7 @@ namespace Nat23
             help_txt += "Lists the saved presets.\n\n";
             help_txt += "save\n";
             help_txt += "Saves the last roll you did as a preset.\n\n";
-            help_txt += "preset <number>\n";
+            help_txt += "preset <number> --or-- p <number>\n";
             help_txt += "Runs the specified preset roll.\n\n";
             help_txt += "delete <number>\n";
             help_txt += "Deletes the specified preset.";
