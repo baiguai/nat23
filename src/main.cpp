@@ -35,7 +35,7 @@ namespace Nat23
         {
             std::string filename = "presets.conf";                                                                                                                                                                                                   
             std::filesystem::path file_path = std::filesystem::current_path() / filename;                                                                                                                                                            
-            config = file_path;
+            config = file_path.string();
 
             if (!std::filesystem::exists(file_path)) {
                 std::ofstream ofile(file_path);
