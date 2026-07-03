@@ -9,6 +9,8 @@
 #include <cstddef>
 #include <stdexcept>
 #include <list>
+#include "fileio.h"
+#include "history.h"
 
 namespace Nat23
 {
