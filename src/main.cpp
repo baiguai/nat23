@@ -7,6 +7,8 @@ int main()
         return 1;
     }
 
+    history::createHistoryDirectories();
+
     Nat23::showHome();
 
     return Nat23::handleInput();
@@ -14,7 +16,6 @@ int main()
 
 namespace Nat23
 {
-    bool DEBUG { false };
     std::string last_roll { "" };
     std::string config { ""};
 
@@ -76,12 +77,6 @@ namespace Nat23
                     break;
                 }
 
-                if (roll_string == "?" || roll_string == "")
-                {
-                    showHelp();
-                    continue;
-                }
-
                 if (roll_string == "? rolls")
                 {
                     showHelpRolls();
@@ -91,6 +86,12 @@ namespace Nat23
                 if (roll_string == "? presets")
                 {
                     showHelpPresets();
+                    continue;
+                }
+
+                if (roll_string == "?" || roll_string == "")
+                {
+                    showHelp();
                     continue;
                 }
 
@@ -120,7 +121,7 @@ namespace Nat23
                     continue;
                 }
 
-                if (roll_string == "presets")
+                if (roll_string == "presets" || roll_string == "pls")
                 {
                     readPresets();
                     continue;
@@ -129,6 +130,13 @@ namespace Nat23
                 if (roll_string == "save")
                 {
                     savePreset();
+                    continue;
+                }
+
+                if (roll_string == "hist clear")
+                {
+                    history::clearHistory();
+                    std::cout << "History files have been removed."; brk();
                     continue;
                 }
 
@@ -145,7 +153,9 @@ namespace Nat23
             help_txt += "For rolls help use: ? rolls";
             help_txt += "\n";
             help_txt += "For presets help use: ? presets";
-            help_txt += "\n\n\n";
+            help_txt += "\n\n";
+            help_txt += "Clear history use: hist clear";
+            help_txt += "\n\n";
             help_txt += "Quit the application\n";
             help_txt += "q";
             help_txt += "\n\n\n";
@@ -201,7 +211,7 @@ namespace Nat23
             std::string help_txt { "" };
 
             help_txt += "List Presets:\n";
-            help_txt += "presets\n";
+            help_txt += "presets or pls\n";
             help_txt += "Lists the saved presets.\n\n";
             help_txt += "save\n";
             help_txt += "Saves the last roll you did as a preset.\n\n";
@@ -213,13 +223,18 @@ namespace Nat23
             std::cout << help_txt; brk();
         }
 
+        void showHelpHistory()
+        {
+            std::string help_txt { "" };
+
+            help_txt += "Clear History:\n";
+            help_txt += "hist clear\n";
+
+            std::cout << help_txt; brk();
+        }
+
         void parseRoll(std::string rollstring)
         {
-            if (DEBUG)
-            {
-                std::cout << "Cool! You rolled some dice! -- " << rollstring << " --"; brk();
-            }
-
             int times { 1 };
             int best_of { 0 };
             int dice_num { 1 };
@@ -284,11 +299,6 @@ namespace Nat23
                 return;
             }
 
-            if (DEBUG)
-            {
-                std::cout << "Number of times: " << times << '\n' << "Number of dice: " << dice_num << '\n' << "Number of sides: " << dice_sides << '\n' << "Best of: " << best_of << '\n' << "Advantage: " << advantage << '\n' << "Penalty: " << penalty; brk();
-            }
-
             doRolls(times, best_of, dice_num, dice_sides, advantage, penalty);
         }
 
@@ -298,6 +308,7 @@ namespace Nat23
             std::list<int> rolls;
             std::string adv { "" };
             std::string pen { "" };
+            std::string roll_output { "" };
 
             if (advantage != 0)
             {
@@ -310,8 +321,14 @@ namespace Nat23
 
             for (int t{ 0 }; t < times; t++)
             {
+                if (roll_output != "")
+                {
+                    roll_output += "\n\n";
+                }
+
                 total = 0;
-                std::cout << "Roll number " << (t+1) << ":\n";
+                roll_output += std::format("Roll number {}\n", (t+1));
+                
                 std::list<int> roll;
                 for (int r{ 0 }; r < dice_num; r++)
                 {
@@ -320,7 +337,7 @@ namespace Nat23
                 
                 for (int itm : roll)
                 {
-                    std::cout << itm << '\n';
+                    roll_output += std::to_string(itm) + "\n";
                 }
 
                 // handle best of
@@ -328,32 +345,41 @@ namespace Nat23
 
                 if (best_of > 0 && best_of < dice_num)
                 {
-                    std::cout << "Best " << best_of << ": ";
+                    roll_output += std::format("Best {}:\n", best_of);
                     int count = 0;
                     for (int itm : roll)
                     {
                         if (count < best_of)
                         {
                             total += itm;
-                            std::cout << itm;
-                            if (count < best_of - 1) std::cout << ", ";
+                            roll_output += std::to_string(itm);
+                            if (count < best_of - 1)
+                            {
+                                roll_output += ", ";
+                            }
                         }
                         count++;
                     }
-                    std::cout << '\n';
+                    roll_output += "\n";
                 }
                 else
                 {
                     // No best_of filtering, sum all as before
                     for (int itm : roll)
+                    {
                         total += itm;
+                    }
                 }
 
                 total = total + advantage;
                 total = total - penalty;
 
-                std::cout << "Total: " << adv << pen << total << "\n\n";
+                roll_output += std::format("\nTotal: {}{}{}\n\n", adv, pen, total);
             }
+
+            std::cout << roll_output;
+
+            history::writeHistory(roll_output);
 
             brk();
         }
