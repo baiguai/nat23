@@ -32,7 +32,7 @@ else
     OPT_FLAGS="-O0 -g"
 fi
 
-CXXFLAGS="-std=c++17 $BASE_FLAGS $OPT_FLAGS"
+CXXFLAGS="-std=c++20 $BASE_FLAGS $OPT_FLAGS"
 CFLAGS="$OPT_FLAGS"
 
 CXXFLAGS_STATIC="-static-libstdc++ -static-libgcc"
