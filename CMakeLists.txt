@@ -12,6 +12,7 @@ add_executable(nat23
 # Compiler-specific options
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(nat23 PRIVATE -Wall -Wextra -O2)
+    target_link_options(nat23 PRIVATE -static-libstdc++ -static-libgcc)
 endif()
 
 # Set output directory
