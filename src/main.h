@@ -11,6 +11,7 @@
 #include <list>
 #include "fileio.h"
 #include "history.h"
+#include <fmt/format.h>
 
 namespace Nat23
 {

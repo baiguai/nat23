@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <chrono>
-#include <format>
+#include <fmt/format.h>
 #include "fileio.h"
 
 namespace history
@@ -21,13 +21,13 @@ namespace history
         auto now = system_clock::now();
         auto local = zoned_time{current_zone(), now}.get_local_time();
         auto secs = floor<seconds>(local);
-        return std::format("{:%Y%m%d-%H:%M:%S}", secs);
+        return fmt::format("{:%Y%m%d-%H:%M:%S}", secs);
     }
 
     inline auto debugLogFileName()
     {
         auto now = std::chrono::system_clock::now();
-        return std::format("data/logs/{:%Y%m%d}_debuglog.txt", now);
+        return fmt::format("data/logs/{:%Y%m%d}_debuglog.txt", now);
     }
 
     inline auto historyFileName()
@@ -35,7 +35,7 @@ namespace history
         using namespace std::chrono;
         auto now = system_clock::now();
         auto local = zoned_time{current_zone(), now}.get_local_time();
-        return std::format("data/history/{:%Y%m%d}_log.txt", local);
+        return fmt::format("data/history/{:%Y%m%d}_log.txt", local);
     }
 
 

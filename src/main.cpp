@@ -327,7 +327,7 @@ namespace Nat23
                 }
 
                 total = 0;
-                roll_output += std::format("Roll number {}\n", (t+1));
+                roll_output += fmt::format("Roll number {}\n", t+1);
                 
                 std::list<int> roll;
                 for (int r{ 0 }; r < dice_num; r++)
@@ -345,7 +345,7 @@ namespace Nat23
 
                 if (best_of > 0 && best_of < dice_num)
                 {
-                    roll_output += std::format("Best {}:\n", best_of);
+                    roll_output += fmt::format("Best {}:\n", best_of);
                     int count = 0;
                     for (int itm : roll)
                     {
@@ -374,7 +374,7 @@ namespace Nat23
                 total = total + advantage;
                 total = total - penalty;
 
-                roll_output += std::format("\nTotal: {}{}{}\n\n", adv, pen, total);
+                roll_output += fmt::format("\nTotal: {}{}{}\n\n", adv, pen, total);
             }
 
             std::cout << roll_output;
