@@ -54,7 +54,9 @@ namespace Nat23
         void showHome()
         {
             std::cout << "+------------------+\n";
-            std::cout << "|  NAT23           |\n";
+            std::cout << "|  ┳┓   ┏┓┏┓       |\n";
+            std::cout << "|  ┃┃┏┓╋┏┛ ┫       |\n";
+            std::cout << "|  ┛┗┗┻┗┗━┗┛       |\n";
             std::cout << "+------------------+\n";
             std::cout << "\n";
             std::cout << "Use ? for help.\n";
@@ -308,7 +310,7 @@ namespace Nat23
             std::list<int> rolls;
             std::string adv { "" };
             std::string pen { "" };
-            std::string roll_output { "" };
+            std::string roll_output { "--------------------------------------------------------------------------------\n" };
 
             if (advantage != 0)
             {
@@ -337,7 +339,7 @@ namespace Nat23
                 
                 for (int itm : roll)
                 {
-                    roll_output += std::to_string(itm) + "\n";
+                    roll_output += "    " + std::to_string(itm) + "\n";
                 }
 
                 // handle best of
@@ -345,12 +347,11 @@ namespace Nat23
 
                 if (best_of > 0 && best_of < dice_num)
                 {
-                    roll_output += std::format("Best {}:\n", best_of);
+                    roll_output += std::format("Best {}:\n    ", best_of);
                     int count = 0;
                     for (int itm : roll)
                     {
-                        if (count < best_of)
-                        {
+                        if (count < best_of) {
                             total += itm;
                             roll_output += std::to_string(itm);
                             if (count < best_of - 1)
@@ -374,8 +375,14 @@ namespace Nat23
                 total = total + advantage;
                 total = total - penalty;
 
-                roll_output += std::format("\nTotal: {}{}{}\n\n", adv, pen, total);
+                roll_output += std::format("\nTotal: {}{}{}\n", adv, pen, total);
+                if (times > 1 && t < (times - 1))
+                {
+                    roll_output += "\n----------------\n";
+                }
             }
+
+            roll_output += "\n--------------------------------------------------------------------------------\n";
 
             std::cout << roll_output;
 
