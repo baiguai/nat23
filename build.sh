@@ -27,7 +27,14 @@ cd build
 # Configure with CMake if needed
 if [ ! -f "Makefile" ]; then
     echo "Configuring with CMake..."
-    cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+    CXX_COMPILER="g++"
+    if command -v g++-13 &>/dev/null; then
+        CXX_COMPILER="g++-13"
+    elif command -v g++-14 &>/dev/null; then
+        CXX_COMPILER="g++-14"
+    fi
+    echo "Using compiler: $CXX_COMPILER"
+    cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=$CXX_COMPILER ..
 fi
 
 # Build the project
